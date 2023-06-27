@@ -55,7 +55,11 @@ const postTask = async (req: express.Request, res: express.Response) :Promise<vo
             const prisma = new PrismaClient();
             const task = await prisma.task.create({
                 data: {
-                    ...req.body,
+                    title: req.body.title,
+                    description: req.body.description,
+                    priority: req.body.priority,
+                    deadline: req.body.deadline ? new Date(req.body.deadline) : undefined,
+                    finished: req.body.finished,
                     userId: res.locals.userId,
                 }
             });
@@ -116,7 +120,11 @@ const patchTask = async (req: express.Request, res: express.Response) :Promise<v
                     id: id
                 },
                 data: {
-                    ...req.body
+                    title: req.body.title,
+                    description: req.body.description,
+                    priority: req.body.priority,
+                    deadline: req.body.deadline ? new Date(req.body.deadline) : undefined,
+                    finished: req.body.finished,
                 }
             });
             res.status(200).json(updatedTask);

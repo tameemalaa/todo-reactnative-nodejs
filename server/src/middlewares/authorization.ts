@@ -6,7 +6,7 @@ const authorizationMiddleware = async (req: express.Request, res: express.Respon
         const token = req.headers.authorization?.split(' ')[1];
         if (token) {
         if (await TokenizationService.validateAccessToken(token)){
-            res.locals.userId = TokenizationService.getUserIdFromToken(token);
+            res.locals.userId = await TokenizationService.getUserIdFromToken(token);
             next();
             return;
         }else{

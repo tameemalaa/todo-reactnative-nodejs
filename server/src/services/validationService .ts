@@ -20,7 +20,7 @@ title: string;
 description?: string;
 finished?: boolean;
 priority?: number;
-deadline?: Date;
+deadline?: string;
 }
 
 interface PatchTaskRequestData {
@@ -28,7 +28,7 @@ title?: string;
 description?: string;
 finished?: boolean;
 priority?: number;
-deadline?: Date;
+deadline?: string;
 }
 class ValidationService {
     private static userSignUpSchema = Yup.object().shape({

@@ -72,6 +72,25 @@ public static async validateRefreshToken (token: string): Promise<boolean> {
     return false;
 }}
 
+public static async getUserIdFromToken (token: string): Promise<string> {
+    try {
+        const payload = jwt.verify(token, this.accessTokenSecretKey);
+        if (typeof payload === 'string') {
+            throw new Error('Invalid token'); 
+        }
+        const user = await this.prisma.user.findUnique({
+            where: {
+                id: payload.id,
+            },
+        });
+        if (user) {
+            return user.id;
+        }
+        throw new Error('Invalid token');
+} catch (error) {
+    throw new Error('Invalid token');
+}}
+
 public static async refreshAccessToken (token: string): Promise<string> {
     try {
         const payload = jwt.verify(token, this.refreshTokenSecretKey);

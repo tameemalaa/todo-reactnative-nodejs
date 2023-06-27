@@ -2,7 +2,7 @@ import express from 'express';
 import { PrismaClient } from '@prisma/client';
 import ValidationService from '../services/validationService ';
 
-const getFinishedTask = async (req: express.Request, res: express.Response) => {
+const getFinishedTask = async (req: express.Request, res: express.Response) :Promise<void> => {
     try{
         const prisma = new PrismaClient();
         const tasks = await prisma.task.findMany({
@@ -18,7 +18,7 @@ const getFinishedTask = async (req: express.Request, res: express.Response) => {
     }
 }
 
-const getUnfinishedTask = async (req: express.Request, res: express.Response) => {
+const getUnfinishedTask = async (req: express.Request, res: express.Response) :Promise<void> =>  {
     try{
         const prisma = new PrismaClient();
         const tasks = await prisma.task.findMany({
@@ -34,7 +34,7 @@ const getUnfinishedTask = async (req: express.Request, res: express.Response) =>
     }
 }
 
-const getTask = async (req: express.Request, res: express.Response) => {
+const getTask = async (req: express.Request, res: express.Response) :Promise<void> =>  {
     try{
         const prisma = new PrismaClient();
         const tasks = await prisma.task.findMany({
@@ -49,7 +49,7 @@ const getTask = async (req: express.Request, res: express.Response) => {
     }
 }
 
-const postTask = async (req: express.Request, res: express.Response) => {
+const postTask = async (req: express.Request, res: express.Response) :Promise<void> =>  {
     try{
         if (await ValidationService.validatePostTaskSchema(req.body)){
             const prisma = new PrismaClient();
@@ -69,7 +69,7 @@ const postTask = async (req: express.Request, res: express.Response) => {
     }
 }
 
-const deleteTask = async (req: express.Request, res: express.Response) => {
+const deleteTask = async (req: express.Request, res: express.Response) :Promise<void> =>  {
     try{
         const prisma = new PrismaClient();
         const {id} = req.params;
@@ -97,7 +97,7 @@ const deleteTask = async (req: express.Request, res: express.Response) => {
     }
 }
 
-const patchTask = async (req: express.Request, res: express.Response) => {
+const patchTask = async (req: express.Request, res: express.Response) :Promise<void> =>  {
     try{
         if (!await ValidationService.validatePatchTaskSchema(req.body)){
             res.status(400).json({error: 'Invalid task'});

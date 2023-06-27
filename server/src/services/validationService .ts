@@ -11,6 +11,9 @@ usernameOrEmail: string;
 password: string;
 }
 
+interface RefreshAccessTokenRequestData {
+refreshToken: string;
+}
 
 class ValidationService {
     private static userSignUpSchema = Yup.object().shape({
@@ -37,6 +40,10 @@ class ValidationService {
         password: Yup.string().required('Password is required'),
     });
     
+    private static refreshTokenSchema = Yup.object().shape({
+        refreshToken: Yup.string().required('Refresh token is required'),
+    });
+
         public static async validateUserSignUpSchema(requestData: UserSignUpRequestData): Promise<boolean> {
         try {
             await this.userSignUpSchema.validate(requestData);
@@ -49,6 +56,15 @@ class ValidationService {
     public static async validateUserSignInSchema(requestData: UserSignInRequestData): Promise<boolean> {
         try {
             await this.userSignInSchema.validate(requestData);
+            return true;
+        } catch (error) {
+        return false;
+        }
+    }
+
+    public static async validateRefreshTokenSchema(requestData: RefreshAccessTokenRequestData): Promise<boolean> {
+        try {
+            await this.refreshTokenSchema.validate(requestData);
             return true;
         } catch (error) {
         return false;

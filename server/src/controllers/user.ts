@@ -1,12 +1,12 @@
 import express from "express"; 
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import { getPrismaClient } from "../prismaClient";
 import ValidationService from "../services/validationService ";
+import TokenizationService from "../services/tokenizationService";
 
 const postUserSignUp = async (req: express.Request, res: express.Response) :Promise<void> => {
-    console.log(req.body);
-    if (await ValidationService.validateUserSchema(req.body)){
+    try{
+    if (await ValidationService.validateUserSignupSchema(req.body)){
         const {username, email, password} = req.body;
         const prisma = getPrismaClient();
         const emailExists = await prisma.user.findUnique({
@@ -25,21 +25,52 @@ const postUserSignUp = async (req: express.Request, res: express.Response) :Prom
         }
         const salt = await bcrypt.genSalt();
         const hashedPassword = bcrypt.hashSync(password, salt);
-        const user = await prisma.user.create({
+        await prisma.user.create({
             data: {
                 username: username,
                 email: email,
                 password: hashedPassword
             }
         });
-        const token = jwt.sign({id: user.id}, process.env.SECRET_KEY as string);
-        res.status(200).json(token);
+        res.status(201).send();
     }else{
         res.status(400).json({error: 'Invalid user data'});
+    }}catch(error){
+        console.log(error);
+        res.status(500).json({error: 'Internal server error'});
     }
 }
 
-const postUserSignIn= async (req: express.Request, res: express.Response) :Promise<void> => {}
+const postUserSignIn= async (req: express.Request, res: express.Response) :Promise<void> => {
+    try {
+    if (await ValidationService.validateUserSigninSchema(req.body)){
+        const {usernameOrEmail, password} = req.body;
+        const prisma = getPrismaClient();
+        const user = await prisma.user.findFirst({
+            where: {
+              OR: [
+                { username: usernameOrEmail },
+                { email: usernameOrEmail },
+              ],
+            },
+          });
+        if (!user){
+            res.status(403).json({error: 'Invalid credentials'});
+            return;
+        }
+        if (!bcrypt.compareSync(password, user.password)){
+            res.status(403).json({error: 'Invalid credentials'});
+            return;
+        }
+        const tokenPair = await TokenizationService.generateTokenPair(user.id);
+        res.status(200).json(tokenPair);
+    }else{
+        res.status(400).json({error: 'Invalid credentials'});
+    }}catch(error){
+        console.log(error);
+        res.status(500).json({error: 'Internal server error'});
+    }
+}
 
 export default {
     postUserSignUp,

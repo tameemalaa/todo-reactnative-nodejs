@@ -1,10 +1,10 @@
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
+import { getPrismaClient } from '../prismaClient';
 import ValidationService from '../services/validationService ';
 
 const getFinishedTask = async (req: express.Request, res: express.Response) :Promise<void> => {
     try{
-        const prisma = new PrismaClient();
+        const prisma = getPrismaClient();
         const tasks = await prisma.task.findMany({
             where: {
                 userId: res.locals.userId,
@@ -20,7 +20,7 @@ const getFinishedTask = async (req: express.Request, res: express.Response) :Pro
 
 const getUnfinishedTask = async (req: express.Request, res: express.Response) :Promise<void> =>  {
     try{
-        const prisma = new PrismaClient();
+        const prisma = getPrismaClient();
         const tasks = await prisma.task.findMany({
             where: {
                 userId: res.locals.userId,
@@ -36,7 +36,7 @@ const getUnfinishedTask = async (req: express.Request, res: express.Response) :P
 
 const getTask = async (req: express.Request, res: express.Response) :Promise<void> =>  {
     try{
-        const prisma = new PrismaClient();
+        const prisma = getPrismaClient();
         const tasks = await prisma.task.findMany({
             where: {
                 userId: res.locals.userId
@@ -52,7 +52,7 @@ const getTask = async (req: express.Request, res: express.Response) :Promise<voi
 const postTask = async (req: express.Request, res: express.Response) :Promise<void> =>  {
     try{
         if (await ValidationService.validatePostTaskSchema(req.body)){
-            const prisma = new PrismaClient();
+            const prisma = getPrismaClient();
             const task = await prisma.task.create({
                 data: {
                     title: req.body.title,
@@ -75,7 +75,7 @@ const postTask = async (req: express.Request, res: express.Response) :Promise<vo
 
 const deleteTask = async (req: express.Request, res: express.Response) :Promise<void> =>  {
     try{
-        const prisma = new PrismaClient();
+        const prisma = getPrismaClient();
         const {id} = req.params;
         const task = await prisma.task.findUnique({
             where: {
@@ -107,7 +107,7 @@ const patchTask = async (req: express.Request, res: express.Response) :Promise<v
             res.status(400).json({error: 'Invalid task'});
             return;
         }
-        const prisma = new PrismaClient();
+        const prisma = getPrismaClient();
         const {id} = req.params;
         const task = await prisma.task.findUnique({
             where: {

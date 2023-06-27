@@ -1,19 +1,19 @@
 import * as Yup from 'yup';
 
-interface UserSignupRequestData {
+interface UserSignUpRequestData {
 username: string;
 email: string;
 password: string;
 rePassword: string;
 }
-interface UserSigninRequestData {
+interface UserSignInRequestData {
 usernameOrEmail: string;
 password: string;
 }
 
 
 class ValidationService {
-    private static userSignupSchema = Yup.object().shape({
+    private static userSignUpSchema = Yup.object().shape({
         username: Yup.string()
           .matches(/^[a-zA-Z0-9._]+$/, 'Username cannot contain special characters except for "." and "_"')
           .min(2, 'Username should be at least 2 characters long')
@@ -32,23 +32,23 @@ class ValidationService {
       });
     
 
-    private static userSigninSchema = Yup.object().shape({
+    private static userSignInSchema = Yup.object().shape({
         usernameOrEmail: Yup.string().required('Username or email is required'),
         password: Yup.string().required('Password is required'),
     });
     
-        public static async validateUserSignupSchema(requestData: UserSignupRequestData): Promise<boolean> {
+        public static async validateUserSignUpSchema(requestData: UserSignUpRequestData): Promise<boolean> {
         try {
-            await this.userSignupSchema.validate(requestData);
+            await this.userSignUpSchema.validate(requestData);
             return true;
         } catch (error) {
         return false;
         }
     }
 
-    public static async validateUserSigninSchema(requestData: UserSigninRequestData): Promise<boolean> {
+    public static async validateUserSignInSchema(requestData: UserSignInRequestData): Promise<boolean> {
         try {
-            await this.userSigninSchema.validate(requestData);
+            await this.userSignInSchema.validate(requestData);
             return true;
         } catch (error) {
         return false;

@@ -6,7 +6,7 @@ import TokenizationService from "../services/tokenizationService";
 
 const postUserSignUp = async (req: express.Request, res: express.Response) :Promise<void> => {
     try{
-    if (await ValidationService.validateUserSignupSchema(req.body)){
+    if (await ValidationService.validateUserSignUpSchema(req.body)){
         const {username, email, password} = req.body;
         const prisma = getPrismaClient();
         const emailExists = await prisma.user.findUnique({
@@ -43,7 +43,7 @@ const postUserSignUp = async (req: express.Request, res: express.Response) :Prom
 
 const postUserSignIn= async (req: express.Request, res: express.Response) :Promise<void> => {
     try {
-    if (await ValidationService.validateUserSigninSchema(req.body)){
+    if (await ValidationService.validateUserSignInSchema(req.body)){
         const {usernameOrEmail, password} = req.body;
         const prisma = getPrismaClient();
         const user = await prisma.user.findFirst({

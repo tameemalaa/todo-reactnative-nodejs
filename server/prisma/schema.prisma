@@ -11,13 +11,14 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid()) @db.VarChar(255)
-  username  String   @unique @db.VarChar(255)
-  password  String   @db.VarChar(255)
-  email     String   @unique @db.VarChar(255)
-  tasks     Task[]   @relation("HasTask")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String         @id @default(uuid()) @db.VarChar(255)
+  username      String         @unique @db.VarChar(255)
+  password      String         @db.VarChar(255)
+  email         String         @unique @db.VarChar(255)
+  tasks         Task[]         @relation("HasTask")
+  refreshTokens RefreshToken[] @relation("HasToken")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
   @@index([username], name: "idx_username", type: Hash)
   @@index([email], name: "idx_email", type: Hash)
@@ -35,5 +36,16 @@ model Task {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  @@index([userId], name: "idx_userId", type: Hash)
+  @@index([userId], name: "idx_userId_Task", type: Hash)
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid()) @db.VarChar(255)
+  token     String   @unique @db.VarChar(255)
+  user      User     @relation("HasToken", fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId], name: "idx_userId_RefreshToken", type: Hash)
 }

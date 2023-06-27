@@ -5,6 +5,7 @@ import { getPrismaClient } from "../prismaClient";
 import ValidationService from "../services/validationService ";
 
 const postUserSignUp = async (req: express.Request, res: express.Response) :Promise<void> => {
+    console.log(req.body);
     if (await ValidationService.validateUserSchema(req.body)){
         const {username, email, password} = req.body;
         const prisma = getPrismaClient();
@@ -31,7 +32,7 @@ const postUserSignUp = async (req: express.Request, res: express.Response) :Prom
                 password: hashedPassword
             }
         });
-        const token = jwt.sign({username: username}, process.env.SECRET_KEY as string);
+        const token = jwt.sign({id: user.id}, process.env.SECRET_KEY as string);
         res.status(200).json(token);
     }else{
         res.status(400).json({error: 'Invalid user data'});

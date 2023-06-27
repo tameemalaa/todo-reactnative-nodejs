@@ -4,9 +4,8 @@ import TokenizationService from "../services/tokenizationService";
 
 const postTokenRefresh = async (req: express.Request, res: express.Response) :Promise<void> => {
     try{
-        console.log('here')
         if (await ValidationService.validateRefreshTokenSchema(req.body)){
-            const {refreshToken} = req.body;
+            const refreshToken = req.body.refreshToken.split(' ')[1];
             if (await TokenizationService.validateRefreshToken(refreshToken)){
                 const accessToken = await TokenizationService.refreshAccessToken(refreshToken);
                 res.status(200).json({accessToken: accessToken});

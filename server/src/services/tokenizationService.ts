@@ -14,7 +14,7 @@ class TokenizationService {
             id: userId,
           };
           const token = jwt.sign(payload, this.accessTokenSecretKey, {expiresIn: this.accessTokenExpirationTimeInSeconds});
-          return token;
+          return `jwt ${token}`;
     }
 
     private static async generateRefreshToken (userId: string): Promise<string> {
@@ -28,7 +28,7 @@ class TokenizationService {
               userId,
             }   
         });
-          return token;
+          return  `jwt ${token}`;
     }
 
     public static async generateTokenPair (userId: string): Promise<{accessToken: string, refreshToken: string}> {

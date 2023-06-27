@@ -15,6 +15,21 @@ interface RefreshAccessTokenRequestData {
 refreshToken: string;
 }
 
+interface PostTaskRequestData {
+title: string;
+description?: string;
+finished?: boolean;
+priority?: number;
+deadline?: Date;
+}
+
+interface PatchTaskRequestData {
+title?: string;
+description?: string;
+finished?: boolean;
+priority?: number;
+deadline?: Date;
+}
 class ValidationService {
     private static userSignUpSchema = Yup.object().shape({
         username: Yup.string()
@@ -40,6 +55,22 @@ class ValidationService {
         password: Yup.string().required('Password is required'),
     });
     
+    private static postTaskSchema = Yup.object().shape({
+        title: Yup.string().required('Title is required'),
+        description: Yup.string(),
+        finished: Yup.boolean(),
+        priority: Yup.number().lessThan(5).moreThan(0),
+        deadline: Yup.date(),
+    });
+
+    private static patchTaskSchema = Yup.object().shape({
+        title: Yup.string(),
+        description: Yup.string(),
+        finished: Yup.boolean(),
+        priority: Yup.number().lessThan(5).moreThan(0),
+        deadline: Yup.date(),
+    })
+
     private static refreshTokenSchema = Yup.object().shape({
         refreshToken: Yup.string().required('Refresh token is required'),
     });
@@ -70,6 +101,25 @@ class ValidationService {
         return false;
         }
     }
+
+    public static async validatePostTaskSchema(requestData: PostTaskRequestData): Promise<boolean> {
+        try {
+            await this.postTaskSchema.validate(requestData);
+            return true;
+        } catch (error) {
+        return false;
+        }
+    }
+
+    public static async validatePatchTaskSchema(requestData: PatchTaskRequestData): Promise<boolean> {
+        try {
+            await this.patchTaskSchema.validate(requestData);
+            return true;
+        } catch (error) {
+        return false;
+        }
+    }
+    
 }
 
 export default ValidationService;

@@ -1,5 +1,5 @@
 import express from "express"; 
-import ValidationService from "../services/validationService ";
+import ValidationService from "../services/validationService";
 import TokenizationService from "../services/tokenizationService";
 
 const postTokenRefresh = async (req: express.Request, res: express.Response) :Promise<void> => {

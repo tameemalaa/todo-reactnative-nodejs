@@ -1,6 +1,6 @@
 import express from 'express';
 import { getPrismaClient } from '../prismaClient';
-import ValidationService from '../services/validationService ';
+import ValidationService from '../services/validationService';
 
 const getFinishedTask = async (req: express.Request, res: express.Response) :Promise<void> => {
     try{

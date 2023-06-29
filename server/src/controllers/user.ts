@@ -1,7 +1,7 @@
 import express from "express"; 
 import bcrypt from 'bcrypt';
 import { getPrismaClient } from "../prismaClient";
-import ValidationService from "../services/validationService ";
+import ValidationService from "../services/validationService";
 import TokenizationService from "../services/tokenizationService";
 
 const postUserSignUp = async (req: express.Request, res: express.Response) :Promise<void> => {

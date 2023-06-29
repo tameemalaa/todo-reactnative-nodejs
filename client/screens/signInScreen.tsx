@@ -3,6 +3,7 @@ import { View, TextInput, Button, StyleSheet, Text, TouchableOpacity } from 'rea
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import ValidationService from '../services/validationService';
+import { baseURL } from '../config';
 
 const SignInScreen:React.FC<any> = ({navigation})  => {
   const [usernameOrEmail, setUsernameOrEmail] = useState('');
@@ -11,7 +12,7 @@ const SignInScreen:React.FC<any> = ({navigation})  => {
     try {
       if (await ValidationService.validateUserSignInSchema({ usernameOrEmail, password })) {
         const response = await axios.post<{ accessToken: string; refreshToken: string }>(
-          'http://192.168.1.2:3000/user/signin',
+          `${baseURL}/user/signin`,
           { usernameOrEmail, password }
         );
         await SecureStore.setItemAsync('accessToken', response.data.accessToken);

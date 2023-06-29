@@ -4,6 +4,7 @@ import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import { useNavigation } from '@react-navigation/native';
 import ValidationService from '../services/validationService';
+import { baseURL } from '../config';
 
 const AddTaskScreen: React.FC = () => {
   const [title, setTitle] = useState('');
@@ -24,7 +25,7 @@ const AddTaskScreen: React.FC = () => {
     if ( await ValidationService.validatePostTaskSchema(task)){
       const accessToken = await SecureStore.getItemAsync('accessToken');
       await axios.post(
-        'http://192.168.1.2:3000/task',
+        `${baseURL}/task`,
         task,
         {
           headers: { Authorization: `${accessToken}` },

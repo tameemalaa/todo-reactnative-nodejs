@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Text,TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import ValidationService from '../services/validationService';
+import { baseURL } from '../config.js';
 
 const SignUpScreen: React.FC<any> = ({navigation}) => {
   const [username, setUsername] = useState('');
@@ -17,7 +18,7 @@ const SignUpScreen: React.FC<any> = ({navigation}) => {
 
     try {
       if (await ValidationService.validateUserSignUpSchema({ username: username, email: email, password: password, rePassword: rePassword })) {
-        const response = await axios.post('http://192.168.1.2:3000/user/signup', {
+        const response = await axios.post(`${baseURL}/user/signup`, {
           username,
           email,
           password,

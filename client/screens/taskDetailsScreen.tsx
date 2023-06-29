@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
+import { baseURL } from '../config.js';
 
   const TaskDetailsScreen: React.FC<any> = (props) => {
   const navigation = useNavigation();
@@ -15,7 +16,7 @@ import * as SecureStore from 'expo-secure-store';
     try {
       const accessToken = await SecureStore.getItemAsync('accessToken');
       await axios.delete(
-        `http://192.168.1.2:3000/task/${task.id}/`,
+        `${baseURL}/task/${task.id}/`,
         {
           headers: { Authorization: `${accessToken}` },
         }

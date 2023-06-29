@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity } from 'reac
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import { useFocusEffect } from '@react-navigation/native';
+import { baseURL } from '../config.js';
 
 interface Task {
   id: string;
@@ -22,7 +23,7 @@ const HomeScreen: React.FC<any> = ({navigation}) => {
   const fetchUnfinishedTasks = async () => {
     try {
       const accessToken = await SecureStore.getItemAsync('accessToken');
-      const response = await axios.get('http://192.168.1.2:3000/task/unfinished', {
+      const response = await axios.get(`${baseURL}/task/unfinished`, {
         headers: { Authorization: `${accessToken}` },
       });
       setTasks(response.data);
@@ -53,7 +54,7 @@ const HomeScreen: React.FC<any> = ({navigation}) => {
     try {
       const accessToken = await SecureStore.getItemAsync('accessToken');
       await axios.patch(
-        `http://192.168.1.2:3000/task/${taskId}/`,
+        `${baseURL}/task/${taskId}/`,
         {finished: true},
         {
           headers: { Authorization: `${accessToken}` },

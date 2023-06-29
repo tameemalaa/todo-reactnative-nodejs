@@ -4,6 +4,7 @@ import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import { useNavigation } from '@react-navigation/native';
 import { useFocusEffect } from '@react-navigation/native';
+import { baseURL } from '../config.js';
 
 interface Task {
   id: string;
@@ -23,7 +24,7 @@ const HistoryScreen: React.FC = () => {
   const fetchFinishedTasks = async () => {
     try {
       const accessToken = await SecureStore.getItemAsync('accessToken');
-      const response = await axios.get('http://192.168.1.2:3000/task/finished', {
+      const response = await axios.get(`${baseURL}/task/finished`, {
         headers: { Authorization: `${accessToken}` },
       });
       setTasks(response.data);
@@ -45,7 +46,7 @@ const HistoryScreen: React.FC = () => {
     try {
       const accessToken = await SecureStore.getItemAsync('accessToken');
       await axios.patch(
-        `http://192.168.1.2:3000/task/${taskId}/`,
+        `${baseURL}/task/${taskId}/`,
         {finished: false},
         {
           headers: { Authorization: `${accessToken}` },
